@@ -110,7 +110,7 @@ namespace AllanMilne.PALCompiler
         // <Expression> ::= <Term> ( (+|-) <Term>)* ;
         protected void recExpression()
         {
-            //recTerm();
+            recTerm();
 
             while (have("+") || have("-"))
             {
@@ -119,9 +119,59 @@ namespace AllanMilne.PALCompiler
                 else
                     mustBe("-");
 
-                //recTerm();
+                recTerm();
             }
         }
+
+        // <Term> ::= <Factor> ((*|/) <Factor>)* ;
+        protected void recTerm()
+        {
+            recFactor();
+
+            while (have("*") || have("/"))
+            {
+                if (have("*"))
+                    mustBe("*");
+                else
+                    mustBe("/");
+
+                recFactor();
+            }
+        }
+
+        // <Factor> ::= (+|-)? ( <Value> | "(" <Expression> ")" ) ;
+        protected void recFactor()
+        {
+            if (have("+"))
+                mustBe("+");
+            else if (have("-"))
+                mustBe("-");
+
+            if (have("("))
+            {
+                mustBe("(");
+                recExpression();
+                mustBe(")");
+            }
+            else
+                recValue();
+        }
+
+        // <Value> ::= Identifier | IntegerValue | RealValue ;
+        protected void recValue()
+        {
+            if (have(Token.IdentifierToken))
+                mustBe(Token.IdentifierToken);
+
+            else if (have(Token.IntegerToken))
+                mustBe(Token.IntegerToken);
+
+            else if (have(Token.RealToken))
+                mustBe(Token.RealToken);
+            else
+                syntaxError("Value must be IDENTIFIER, INTEGER or REAL");
+        }
+
 
         // <Loop> ::= UNTIL <BooleanExpr> REPEAT (<Statement>)* ENDLOOP ;
         protected void recLoop()
