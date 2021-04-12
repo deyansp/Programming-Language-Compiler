@@ -80,11 +80,11 @@ namespace AllanMilne.PALCompiler
             }
             else if (have("IF"))
             {
-
+                recConditional();
             }
             else if (have("INPUT") || have("OUTPUT"))
             {
-
+                recIO();
             }
             else
                 syntaxError("expected Assignment, Loop, Conditional, or I/O statement");
@@ -92,7 +92,7 @@ namespace AllanMilne.PALCompiler
 
         protected void recBlockOfStatements()
         {
-            while (have(Token.IdentifierToken) || have("UNTIL") || have("IF") 
+            while (have(Token.IdentifierToken) || have("UNTIL") || have("IF")
                     || have("INPUT") || have("OUTPUT"))
             {
                 recStatement();
@@ -187,7 +187,7 @@ namespace AllanMilne.PALCompiler
         protected void recBooleanExpr()
         {
             recExpression();
-            
+
             if (have("<"))
                 mustBe("<");
 
@@ -201,6 +201,52 @@ namespace AllanMilne.PALCompiler
 
             recExpression();
         }
+
+        // <Conditional> ::= IF<BooleanExpr> THEN(<Statement>)*
+        //                   (ELSE (<Statement>)* )? 
+        //                   ENDIF ;
+        protected void recConditional()
+        {
+            mustBe("IF");
+            recBooleanExpr();
+            mustBe("THEN");
+            recBlockOfStatements();
+
+            if (have("ELSE"))
+            {
+                mustBe("ELSE");
+                recBlockOfStatements();
+            }
+
+            mustBe("ENDIF");
+        }
+
+        //<I-o> ::= INPUT<IdentList> | 
+        //          OUTPUT<Expression>( , <Expression>)* ;
+        protected void recIO()
+        {
+            if (have("INPUT"))
+            {
+                mustBe("INPUT");
+                recIdentList();
+            }
+
+            else if (have("OUTPUT"))
+            {
+                mustBe("OUTPUT");
+                recExpression();
+
+                while (have(","))
+                {
+                    mustBe(",");
+                    recExpression();
+                }
+            }
+
+            else
+                syntaxError("Invalid I/O statement");
+        }
+
 
     } // end PALPureParser class.
 
