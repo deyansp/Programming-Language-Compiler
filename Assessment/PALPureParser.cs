@@ -177,10 +177,29 @@ namespace AllanMilne.PALCompiler
         protected void recLoop()
         {
             mustBe("UNTIL");
-            //recBoolExpression();
+            recBooleanExpr();
             mustBe("REPEAT");
             recBlockOfStatements();
             mustBe("ENDLOOP");
+        }
+
+        // <BooleanExpr> ::= <Expression> ("<" | "=" | ">") <Expression> ;
+        protected void recBooleanExpr()
+        {
+            recExpression();
+            
+            if (have("<"))
+                mustBe("<");
+
+            else if (have("="))
+                mustBe("=");
+
+            else if (have(">"))
+                mustBe(">");
+            else
+                syntaxError("invalid BOOLEAN EXPRESSION");
+
+            recExpression();
         }
 
     } // end PALPureParser class.
