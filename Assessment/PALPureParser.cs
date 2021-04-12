@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using AllanMilne.Ardkit;
+using System;
 using System.Collections.Generic;
-
-using AllanMilne.Ardkit;
 
 namespace AllanMilne.PALCompiler
 {
@@ -11,7 +9,7 @@ namespace AllanMilne.PALCompiler
         //--- The constructor method.
         public PALPureParser()
         : base(new PALScanner())
-        {  }
+        { }
 
         private List<String> variables = new List<String>();
 
@@ -19,7 +17,8 @@ namespace AllanMilne.PALCompiler
         {
             recProgram();
         }
-        
+
+        // starting point for syntax analysis
         protected void recProgram()
         {
             mustBe("PROGRAM");
@@ -27,10 +26,12 @@ namespace AllanMilne.PALCompiler
             mustBe("WITH");
             recVarDecls();
             mustBe("IN");
-            //recStatement();
+            recStatement();
             mustBe("END");
+            mustBe(Token.EndOfFile);
         }
 
+        // <VarDecls> ::= (<IdentList> AS <Type>)* ;
         protected void recVarDecls()
         {
             while (have(Token.IdentifierToken))
@@ -41,21 +42,23 @@ namespace AllanMilne.PALCompiler
             }
         }
 
+        // <IdentList> ::= Identifier( , Identifier)* ;
         protected void recIdentList()
         {
             mustBe(Token.IdentifierToken);
             variables.Add(scanner.CurrentToken.ToString());
-            
-            while(have(","))
+
+            while (have(","))
             {
                 mustBe(",");
                 variables.Add(scanner.CurrentToken.ToString());
                 mustBe(Token.IdentifierToken);
             }
 
-            //check here for duplicates?
+            //check for duplicates in semantics analysis
         }
 
+        // <Type> ::= REAL | INTEGER ;
         protected void recType()
         {
             if (have("REAL"))
@@ -66,6 +69,69 @@ namespace AllanMilne.PALCompiler
                 syntaxError("variable type must be REAL or INTEGER");
         }
 
+        // <Statement> ::= <Assignment> | <Loop> | <Conditional> | <I-o> ;
+        protected void recStatement()
+        {
+            if (have(Token.IdentifierToken))
+                recAssignment();
+            else if (have("UNTIL"))
+            {
+                recLoop();
+            }
+            else if (have("IF"))
+            {
+
+            }
+            else if (have("INPUT") || have("OUTPUT"))
+            {
+
+            }
+            else
+                syntaxError("expected Assignment, Loop, Conditional, or I/O statement");
+        }
+
+        protected void recBlockOfStatements()
+        {
+            while (have(Token.IdentifierToken) || have("UNTIL") || have("IF") 
+                    || have("INPUT") || have("OUTPUT"))
+            {
+                recStatement();
+            }
+        }
+
+        // <Assignment> ::= Identifier = <Expression> ;
+        protected void recAssignment()
+        {
+            mustBe(Token.IdentifierToken);
+            mustBe("=");
+            recExpression();
+        }
+
+        // <Expression> ::= <Term> ( (+|-) <Term>)* ;
+        protected void recExpression()
+        {
+            //recTerm();
+
+            while (have("+") || have("-"))
+            {
+                if (have("+"))
+                    mustBe("+");
+                else
+                    mustBe("-");
+
+                //recTerm();
+            }
+        }
+
+        // <Loop> ::= UNTIL <BooleanExpr> REPEAT (<Statement>)* ENDLOOP ;
+        protected void recLoop()
+        {
+            mustBe("UNTIL");
+            //recBoolExpression();
+            mustBe("REPEAT");
+            recBlockOfStatements();
+            mustBe("ENDLOOP");
+        }
 
     } // end PALPureParser class.
 
