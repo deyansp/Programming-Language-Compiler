@@ -27,6 +27,7 @@ namespace AllanMilne.PALCompiler
             recVarDecls();
             mustBe("IN");
             recStatement();
+            recBlockOfStatements();
             mustBe("END");
             mustBe(Token.EndOfFile);
         }
@@ -62,9 +63,9 @@ namespace AllanMilne.PALCompiler
         protected void recType()
         {
             if (have("REAL"))
-                mustBe(Token.RealToken);
+                mustBe("REAL");
             else if (have("INTEGER"))
-                mustBe(Token.IntegerToken);
+                mustBe("INTEGER");
             else
                 syntaxError("variable type must be REAL or INTEGER");
         }
