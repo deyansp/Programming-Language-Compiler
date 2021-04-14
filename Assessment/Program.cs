@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using AllanMilne.Ardkit;
 
 namespace AllanMilne.PALCompiler
 {
@@ -6,7 +9,36 @@ namespace AllanMilne.PALCompiler
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-        }
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Invalid usage: <filename>");
+                return;
+            }
+
+            //--- Open the input source file.
+            StreamReader infile = null;
+            try
+            {
+                infile = new StreamReader(args[0]);
+            }
+            catch (IOException e) { Console.WriteLine(e.ToString()); }
+
+            //--- Parsing and then outputting any syntax errors found
+            PALPureParser parser = new PALPureParser();
+            parser.Parse(infile);
+
+            foreach(var err in parser.Errors)
+            {
+                Console.WriteLine(err.ToString());
+            }
+
+            try
+            {
+                infile.Close();
+            }
+            catch (IOException e) { Console.WriteLine(e.ToString()); }
+
+        } // end Main method.
     }
 }
+
