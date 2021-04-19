@@ -9,20 +9,7 @@ namespace AllanMilne.PALCompiler
     {
         public PALSemantics(IParser p) : base(p)
         { }
-        enum PALType
-        {
-           Boolean,
-           Integer,
-           Real,
-           Invalid
-        }
 
-        struct Declaration
-        {
-            PALType varType;
-
-        }
-
-        Dictionary<String, PALType> variables;
+        //Dictionary<String, PALType> variables;
     }
 }
