@@ -43,27 +43,33 @@ namespace AllanMilne.PALCompiler
         {
             while (have(Token.IdentifierToken))
             {
-                recIdentList();
+                var varNames = recIdentList();
                 mustBe("AS");
-                recType();
+                int type = recType();
+
+                foreach(var id in varNames)
+                {
+                    // declaring each variable with its name and type
+                    semantics.DeclareId(id, type);
+                }
             }
         }
 
         // <IdentList> ::= Identifier( , Identifier)* ;
-        protected void recIdentList()
+        protected List<IToken> recIdentList()
         {
-            
+            List<IToken> identifiers = new List<IToken>();
+            identifiers.Add(scanner.CurrentToken);
             mustBe(Token.IdentifierToken);
-            variables.Add(scanner.CurrentToken.ToString());
 
             while (have(","))
             {
                 mustBe(",");
-                variables.Add(scanner.CurrentToken.ToString());
+                identifiers.Add(scanner.CurrentToken);
                 mustBe(Token.IdentifierToken);
             }
 
-            //check for duplicates in semantics analysis
+            return identifiers;
         }
 
         // <Type> ::= REAL | INTEGER ;
