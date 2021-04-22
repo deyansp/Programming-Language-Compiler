@@ -11,7 +11,7 @@ namespace AllanMilne.PALCompiler
         { }
 
 		// stores newly defined variables in the current Scope object's symbols
-		public void DeclareId(IToken id)
+		public void DeclareId(IToken id, int type)
 		{
 			if (!id.Is(Token.IdentifierToken)) return;  // only proceed if an identifier.
 			Scope symbols = Scope.CurrentScope;
@@ -21,7 +21,7 @@ namespace AllanMilne.PALCompiler
 			}
 			else
 			{
-				symbols.Add(new VarSymbol(id, currentType));
+				symbols.Add(new VarSymbol(id, type));
 			}
 		}
 
