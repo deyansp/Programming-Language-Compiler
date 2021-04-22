@@ -182,18 +182,33 @@ namespace AllanMilne.PALCompiler
         }
 
         // <Value> ::= Identifier | IntegerValue | RealValue ;
-        protected void recValue()
+        protected int recValue()
         {
+            int valueType = LanguageType.Undefined;
+            IToken token = scanner.CurrentToken;
+            
             if (have(Token.IdentifierToken))
+            {
                 mustBe(Token.IdentifierToken);
+                valueType = semantics.checkVariable(token);
+            }
 
             else if (have(Token.IntegerToken))
+            {
                 mustBe(Token.IntegerToken);
+                valueType = semantics.checkValueType(token);
+            }
 
             else if (have(Token.RealToken))
+            {
                 mustBe(Token.RealToken);
+                valueType = semantics.checkValueType(token);
+            }
+            
             else
                 syntaxError("Value must be IDENTIFIER, INTEGER or REAL");
+
+            return valueType;
         }
 
 
