@@ -24,7 +24,7 @@ namespace AllanMilne.PALCompiler
             catch (IOException e) { Console.WriteLine(e.ToString()); }
 
             //--- Parsing and then outputting any syntax errors found
-            PALPureParser parser = new PALPureParser();
+            PALParser parser = new PALParser();
             parser.Parse(infile);
 
             foreach(var err in parser.Errors)

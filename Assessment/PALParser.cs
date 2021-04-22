@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 namespace AllanMilne.PALCompiler
 {
-    public class PALPureParser : RecoveringRdParser
+    public class PALParser : RecoveringRdParser
     {
         private PALSemantics semantics;
 
         //--- The constructor method.
-        public PALPureParser()
+        public PALParser()
         : base(new PALScanner())
         {
             semantics = new PALSemantics(this);
@@ -25,6 +25,7 @@ namespace AllanMilne.PALCompiler
         // starting point for syntax analysis
         protected void recProgram()
         {
+            Scope.OpenScope();
             mustBe("PROGRAM");
             mustBe(Token.IdentifierToken);
             mustBe("WITH");
@@ -34,6 +35,7 @@ namespace AllanMilne.PALCompiler
             recBlockOfStatements();
             mustBe("END");
             mustBe(Token.EndOfFile);
+            Scope.CloseScope();
         }
 
         // <VarDecls> ::= (<IdentList> AS <Type>)* ;
@@ -50,6 +52,7 @@ namespace AllanMilne.PALCompiler
         // <IdentList> ::= Identifier( , Identifier)* ;
         protected void recIdentList()
         {
+            
             mustBe(Token.IdentifierToken);
             variables.Add(scanner.CurrentToken.ToString());
 
