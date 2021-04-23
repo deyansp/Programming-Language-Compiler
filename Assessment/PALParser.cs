@@ -50,7 +50,7 @@ namespace AllanMilne.PALCompiler
                 foreach(var id in varNames)
                 {
                     // declaring each variable with its name and type
-                    semantics.DeclareId(id, type);
+                    semantics.declareVariable(id, type);
                 }
             }
         }
@@ -287,6 +287,6 @@ namespace AllanMilne.PALCompiler
         }
 
 
-    } // end PALPureParser class.
+    } // end PALParser class
 
-} // end namespace.
+} // end namespace
