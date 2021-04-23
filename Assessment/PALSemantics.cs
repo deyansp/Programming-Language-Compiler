@@ -60,7 +60,6 @@ namespace AllanMilne.PALCompiler
         {
             if (type1 != type2)
             {
-                // token here is the variable that gets reported in the error message, need to fix
                 semanticError(new TypeConflictError(token, type2, type1));
                 return false;
             }
@@ -68,7 +67,7 @@ namespace AllanMilne.PALCompiler
             return true;
         }
 
-        public int checkExpression(IToken operation, IToken expectedToken, int lhs, int rhs)
+        public int checkExpression(IToken operation, IToken expected, int lhs, int rhs)
         {
             // if either side is invalid there is no point in checking further
             // as Undefined will be returned anyway
@@ -78,7 +77,7 @@ namespace AllanMilne.PALCompiler
             }
 
             // if both sides are of the same type, return that as the overall expression type
-            if (checkTypesSame(expectedToken, lhs, rhs))
+            if (checkTypesSame(expected, lhs, rhs))
                 return lhs;
             // otherwise dummy value
             else
