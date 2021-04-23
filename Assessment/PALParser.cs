@@ -144,6 +144,7 @@ namespace AllanMilne.PALCompiler
                     mustBe("+");
                 else
                     mustBe("-");
+                
                 // save token for correct error reporting
                 IToken expectedToken = scanner.CurrentToken;
                 
