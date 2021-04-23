@@ -132,39 +132,48 @@ namespace AllanMilne.PALCompiler
         }
 
         // <Expression> ::= <Term> ( (+|-) <Term>)* ;
-        protected void recExpression()
+        protected int recExpression()
         {
-            recTerm();
+            int type = recTerm();
 
             while (have("+") || have("-"))
             {
+                IToken operation = scanner.CurrentToken;
+
                 if (have("+"))
                     mustBe("+");
                 else
                     mustBe("-");
 
-                recTerm();
+                int rhs = recTerm();
+                type = semantics.checkExpression(operation, type, rhs);
             }
+
+            return type;
         }
 
         // <Term> ::= <Factor> ((*|/) <Factor>)* ;
-        protected void recTerm()
+        protected int recTerm()
         {
-            recFactor();
+            int type = recFactor();
 
             while (have("*") || have("/"))
             {
+                IToken operation = scanner.CurrentToken;
+                
                 if (have("*"))
                     mustBe("*");
                 else
                     mustBe("/");
-
-                recFactor();
+                
+                int rhs = recFactor();
+                type = semantics.checkExpression(operation, type, rhs);
             }
+            return type;
         }
 
         // <Factor> ::= (+|-)? ( <Value> | "(" <Expression> ")" ) ;
-        protected void recFactor()
+        protected int recFactor()
         {
             if (have("+"))
                 mustBe("+");
@@ -174,11 +183,12 @@ namespace AllanMilne.PALCompiler
             if (have("("))
             {
                 mustBe("(");
-                recExpression();
+                int type = recExpression();
                 mustBe(")");
+                return type;
             }
             else
-                recValue();
+                return recValue();
         }
 
         // <Value> ::= Identifier | IntegerValue | RealValue ;

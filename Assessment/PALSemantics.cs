@@ -55,5 +55,34 @@ namespace AllanMilne.PALCompiler
 
             return thisType;
         }
+
+        public bool checkTypesSame (IToken token, int type1, int type2)
+        {
+            if (type1 != type2)
+            {
+                // token here is the variable that gets reported in the error message, need to fix
+                semanticError(new TypeConflictError(token, type2, type1));
+                return false;
+            }
+            
+            return true;
+        }
+
+        public int checkExpression(IToken operation, int lhs, int rhs)
+        {
+            // if either side is invalid there is no point in checking further
+            // as Undefined will be returned anyway
+            if (lhs == LanguageType.Undefined || rhs == LanguageType.Undefined)
+            {
+                return LanguageType.Undefined;
+            }
+
+            // if both sides are of the same type, return that as the overall expression type
+            if (checkTypesSame(operation, lhs, rhs))
+                return lhs;
+            // otherwise dummy value
+            else
+                return LanguageType.Undefined;
+        }
     }
 }
