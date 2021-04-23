@@ -144,9 +144,11 @@ namespace AllanMilne.PALCompiler
                     mustBe("+");
                 else
                     mustBe("-");
-
+                // save token for correct error reporting
+                IToken expectedToken = scanner.CurrentToken;
+                
                 int rhs = recTerm();
-                type = semantics.checkExpression(operation, type, rhs);
+                type = semantics.checkExpression(operation, expectedToken, type, rhs);
             }
 
             return type;
@@ -166,8 +168,11 @@ namespace AllanMilne.PALCompiler
                 else
                     mustBe("/");
                 
+                // save token for correct error reporting
+                IToken expectedToken = scanner.CurrentToken;
+                
                 int rhs = recFactor();
-                type = semantics.checkExpression(operation, type, rhs);
+                type = semantics.checkExpression(operation, expectedToken, type, rhs);
             }
             return type;
         }

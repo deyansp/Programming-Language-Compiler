@@ -68,7 +68,7 @@ namespace AllanMilne.PALCompiler
             return true;
         }
 
-        public int checkExpression(IToken operation, int lhs, int rhs)
+        public int checkExpression(IToken operation, IToken expectedToken, int lhs, int rhs)
         {
             // if either side is invalid there is no point in checking further
             // as Undefined will be returned anyway
@@ -78,7 +78,7 @@ namespace AllanMilne.PALCompiler
             }
 
             // if both sides are of the same type, return that as the overall expression type
-            if (checkTypesSame(operation, lhs, rhs))
+            if (checkTypesSame(expectedToken, lhs, rhs))
                 return lhs;
             // otherwise dummy value
             else
