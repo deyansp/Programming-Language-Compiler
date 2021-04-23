@@ -83,5 +83,15 @@ namespace AllanMilne.PALCompiler
             else
                 return LanguageType.Undefined;
         }
+
+        public void checkAssignment(IToken expected, IToken lhs, int rhs)
+        {
+            int variable = checkVariable(lhs);
+
+            if (variable != LanguageType.Undefined && rhs != LanguageType.Undefined)
+            {
+                checkTypesSame(expected, rhs, variable);
+            }
+        }
     }
 }

@@ -126,9 +126,19 @@ namespace AllanMilne.PALCompiler
         // <Assignment> ::= Identifier = <Expression> ;
         protected void recAssignment()
         {
+            // the variable being assigned to
+            IToken lhs = scanner.CurrentToken;
             mustBe(Token.IdentifierToken);
+
+            bool needToCheck = have("=");
             mustBe("=");
-            recExpression();
+
+            IToken expectedToken = scanner.CurrentToken;
+            int rhs = recExpression();
+            
+            // only checking assignment semantics if there is an equals sign
+            if (needToCheck)
+                semantics.checkAssignment(expectedToken, lhs, rhs);
         }
 
         // <Expression> ::= <Term> ( (+|-) <Term>)* ;
