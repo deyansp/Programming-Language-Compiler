@@ -136,7 +136,7 @@ namespace AllanMilne.PALCompiler
             IToken expectedToken = scanner.CurrentToken;
             int rhs = recExpression();
             
-            // only checking assignment semantics if there is an equals sign
+            // only checking assignment semantics if there is an equals sign, i.e valid assignment syntax
             if (needToCheck)
                 semantics.checkAssignment(expectedToken, lhs, rhs);
         }
@@ -268,6 +268,14 @@ namespace AllanMilne.PALCompiler
             IToken expectedToken = scanner.CurrentToken;
 
             int rhs = recExpression();
+
+            // if either side is invalid there is no point in checking further
+            // as Undefined will be returned anyway, and the error will be reported
+            // by the Parser's recValue method
+            if (lhs != LanguageType.Undefined && rhs != LanguageType.Undefined)
+            {
+                semantics.checkTypesSame(expectedToken, rhs, lhs);
+            }
         }
 
         // <Conditional> ::= IF<BooleanExpr> THEN(<Statement>)*
