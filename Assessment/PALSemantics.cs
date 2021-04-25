@@ -79,19 +79,5 @@ namespace AllanMilne.PALCompiler
             else
                 return LanguageType.Undefined;
         }
-
-        public void checkAssignment(IToken expected, IToken lhs, int rhs)
-        {
-            // check if the variable being assigned to exists
-            int variable = checkVariable(lhs);
-
-            // if either side is invalid there is no point in checking further
-            // as Undefined will be returned anyway, and the error will be reported
-            // by the Parser's recValue method
-            if (variable != LanguageType.Undefined && rhs != LanguageType.Undefined)
-            {
-                checkTypesSame(expected, rhs, variable);
-            }
-        }
     }
 }
