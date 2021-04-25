@@ -251,7 +251,7 @@ namespace AllanMilne.PALCompiler
         // <BooleanExpr> ::= <Expression> ("<" | "=" | ">") <Expression> ;
         protected void recBooleanExpr()
         {
-            recExpression();
+            int lhs = recExpression();
 
             if (have("<"))
                 mustBe("<");
@@ -263,8 +263,11 @@ namespace AllanMilne.PALCompiler
                 mustBe(">");
             else
                 syntaxError("invalid BOOLEAN EXPRESSION");
+            
+            // save token for correct error reporting
+            IToken expectedToken = scanner.CurrentToken;
 
-            recExpression();
+            int rhs = recExpression();
         }
 
         // <Conditional> ::= IF<BooleanExpr> THEN(<Statement>)*

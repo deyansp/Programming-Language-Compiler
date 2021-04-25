@@ -42,6 +42,7 @@ namespace AllanMilne.PALCompiler
             else return checkValueType(id);
         }
 
+        // returns a variable's type
         public int checkValueType(IToken token)
         {
             int thisType = LanguageType.Undefined;
@@ -70,7 +71,8 @@ namespace AllanMilne.PALCompiler
         public int checkExpression(IToken operation, IToken expected, int lhs, int rhs)
         {
             // if either side is invalid there is no point in checking further
-            // as Undefined will be returned anyway
+            // as Undefined will be returned anyway  and the error will be reported
+            // by the Parser's recValue method
             if (lhs == LanguageType.Undefined || rhs == LanguageType.Undefined)
             {
                 return LanguageType.Undefined;
@@ -86,11 +88,26 @@ namespace AllanMilne.PALCompiler
 
         public void checkAssignment(IToken expected, IToken lhs, int rhs)
         {
+            // check if the variable being assigned to exists
             int variable = checkVariable(lhs);
 
+            // if either side is invalid there is no point in checking further
+            // as Undefined will be returned anyway, and the error will be reported
+            // by the Parser's recValue method
             if (variable != LanguageType.Undefined && rhs != LanguageType.Undefined)
             {
                 checkTypesSame(expected, rhs, variable);
+            }
+        }
+
+        public void checkBooleanExpression(IToken expected, int lhs, int rhs)
+        {
+            // if either side is invalid there is no point in checking further
+            // as Undefined will be returned anyway, and the error will be reported
+            // by the Parser's recValue method
+            if (lhs != LanguageType.Undefined && rhs != LanguageType.Undefined)
+            {
+                checkTypesSame(expected, rhs, lhs);
             }
         }
     }
