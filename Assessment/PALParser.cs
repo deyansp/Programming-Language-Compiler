@@ -131,7 +131,8 @@ namespace AllanMilne.PALCompiler
             bool needToCheck = have("=");
             mustBe("=");
 
-            IToken expectedToken = scanner.CurrentToken;
+            // save token for correct error reporting
+            IToken rhsToken = scanner.CurrentToken;
             int rhs = recExpression();
 
             // only checking assignment semantics if there is an equals sign, i.e valid assignment syntax
@@ -140,13 +141,7 @@ namespace AllanMilne.PALCompiler
                 // check if the variable being assigned to exists
                 int variable = semantics.checkVariable(lhs);
 
-                // if either side is invalid there is no point in checking further
-                // as Undefined will be returned anyway, and the error will be reported
-                // by the Parser's recValue method
-                if (variable != LanguageType.Undefined && rhs != LanguageType.Undefined)
-                {
-                    semantics.checkTypesSame(expectedToken, rhs, variable);
-                }
+                semantics.checkTypesSame(rhsToken, variable, rhs);
             }
         }
 
@@ -163,10 +158,10 @@ namespace AllanMilne.PALCompiler
                     mustBe("-");
                 
                 // save token for correct error reporting
-                IToken expectedToken = scanner.CurrentToken;
+                IToken rhsToken = scanner.CurrentToken;
                 
                 int rhs = recTerm();
-                type = semantics.checkExpression(expectedToken, type, rhs);
+                type = semantics.checkExpression(rhsToken, type, rhs);
             }
 
             return type;
@@ -185,10 +180,10 @@ namespace AllanMilne.PALCompiler
                     mustBe("/");
                 
                 // save token for correct error reporting
-                IToken expectedToken = scanner.CurrentToken;
+                IToken rhsToken = scanner.CurrentToken;
                 
                 int rhs = recFactor();
-                type = semantics.checkExpression(expectedToken, type, rhs);
+                type = semantics.checkExpression(rhsToken, type, rhs);
             }
             return type;
         }
@@ -270,17 +265,11 @@ namespace AllanMilne.PALCompiler
                 syntaxError("invalid BOOLEAN EXPRESSION");
             
             // save token for correct error reporting
-            IToken expectedToken = scanner.CurrentToken;
+            IToken rhsToken = scanner.CurrentToken;
 
             int rhs = recExpression();
 
-            // if either side is invalid there is no point in checking further
-            // as Undefined will be returned anyway, and the error will be reported
-            // by the Parser's recValue method
-            if (lhs != LanguageType.Undefined && rhs != LanguageType.Undefined)
-            {
-                semantics.checkTypesSame(expectedToken, rhs, lhs);
-            }
+            semantics.checkTypesSame(rhsToken, lhs, rhs);
         }
 
         // <Conditional> ::= IF<BooleanExpr> THEN(<Statement>)*
