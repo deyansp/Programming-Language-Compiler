@@ -64,10 +64,10 @@ namespace AllanMilne.PALCompiler
 
         public int checkExpression(IToken expected, int lhs, int rhs)
         {
-            // if either side is invalid there is no point in checking further
-            // as Undefined will be returned anyway  and the error will be reported
+            // if both sides are invalid there is no point in checking further
+            // as Undefined will be returned anyway and the error has been reported
             // by the Parser's recValue method
-            if (lhs == LanguageType.Undefined || rhs == LanguageType.Undefined)
+            if (lhs == LanguageType.Undefined && rhs == LanguageType.Undefined)
             {
                 return LanguageType.Undefined;
             }
@@ -75,9 +75,9 @@ namespace AllanMilne.PALCompiler
             // if both sides are of the same type, return that as the overall expression type
             if (checkTypesSame(expected, lhs, rhs))
                 return lhs;
-            // otherwise dummy value
+            // otherwise return the bigger type of the two (type inference)
             else
-                return LanguageType.Undefined;
+                return lhs > rhs ? lhs : rhs;
         }
     }
 }
