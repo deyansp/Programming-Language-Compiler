@@ -8,14 +8,12 @@ namespace AllanMilne.PALCompiler
     {
         private PALSemantics semantics;
 
-        //--- The constructor method.
+        // the constructor
         public PALParser()
         : base(new PALScanner())
         {
             semantics = new PALSemantics(this);
         }
-        
-        private List<String> variables = new List<String>();
 
         protected override void recStarter()
         {
@@ -159,7 +157,6 @@ namespace AllanMilne.PALCompiler
 
             while (have("+") || have("-"))
             {
-                IToken operation = scanner.CurrentToken;
 
                 if (have("+"))
                     mustBe("+");
@@ -170,7 +167,7 @@ namespace AllanMilne.PALCompiler
                 IToken expectedToken = scanner.CurrentToken;
                 
                 int rhs = recTerm();
-                type = semantics.checkExpression(operation, expectedToken, type, rhs);
+                type = semantics.checkExpression(expectedToken, type, rhs);
             }
 
             return type;
@@ -183,8 +180,6 @@ namespace AllanMilne.PALCompiler
 
             while (have("*") || have("/"))
             {
-                IToken operation = scanner.CurrentToken;
-                
                 if (have("*"))
                     mustBe("*");
                 else
@@ -194,7 +189,7 @@ namespace AllanMilne.PALCompiler
                 IToken expectedToken = scanner.CurrentToken;
                 
                 int rhs = recFactor();
-                type = semantics.checkExpression(operation, expectedToken, type, rhs);
+                type = semantics.checkExpression(expectedToken, type, rhs);
             }
             return type;
         }
@@ -315,7 +310,13 @@ namespace AllanMilne.PALCompiler
             if (have("INPUT"))
             {
                 mustBe("INPUT");
-                recIdentList();
+                List<IToken> identifiers = recIdentList();
+
+                // checking if the variables exist
+                foreach(var id in identifiers)
+                {
+                    semantics.checkVariable(id);
+                }
             }
 
             else if (have("OUTPUT"))

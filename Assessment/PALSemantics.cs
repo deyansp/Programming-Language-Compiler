@@ -21,6 +21,7 @@ namespace AllanMilne.PALCompiler
             }
             else
             {
+                //if()
                 symbols.Add(new VarSymbol(id, type));
             }
         }
@@ -62,7 +63,7 @@ namespace AllanMilne.PALCompiler
             return true;
         }
 
-        public int checkExpression(IToken operation, IToken expected, int lhs, int rhs)
+        public int checkExpression(IToken expected, int lhs, int rhs)
         {
             // if either side is invalid there is no point in checking further
             // as Undefined will be returned anyway  and the error will be reported
