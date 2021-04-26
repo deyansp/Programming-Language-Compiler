@@ -21,7 +21,6 @@ namespace AllanMilne.PALCompiler
             }
             else
             {
-                //if()
                 symbols.Add(new VarSymbol(id, type));
             }
         }

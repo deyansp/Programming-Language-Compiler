@@ -20,7 +20,7 @@ namespace AllanMilne.PALCompiler
             recProgram();
         }
 
-        // starting point for syntax analysis
+        // starting point for analysis
         protected void recProgram()
         {
             Scope.OpenScope();
@@ -157,7 +157,6 @@ namespace AllanMilne.PALCompiler
 
             while (have("+") || have("-"))
             {
-
                 if (have("+"))
                     mustBe("+");
                 else
@@ -291,6 +290,7 @@ namespace AllanMilne.PALCompiler
         {
             mustBe("IF");
             recBooleanExpr();
+            
             mustBe("THEN");
             recBlockOfStatements();
 
