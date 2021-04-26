@@ -51,7 +51,7 @@ Token token = null;
             startLine = line;   startCol = column;    // start of actual token.
             strbuf =new StringBuilder();              // for actual token.
 
-            if (Char.IsLetter (currentChar))                    state = 1;
+            if (Char.IsLetter (currentChar) || "_".IndexOf(currentChar) != -1) state = 1;
             else if (Char.IsDigit (currentChar))                state = 2;
             else if ("+-*/(),=<>".IndexOf(currentChar) != -1)   state = 4;
             else if (currentChar == eofChar)                    state = 98;
@@ -61,7 +61,7 @@ Token token = null;
 
          case 1:   // Identifier or keyword state.
             if (Char.IsLetter(currentChar) ||
-                Char.IsDigit(currentChar) )
+                Char.IsDigit(currentChar) || "_".IndexOf(currentChar) != -1 )
                  state = 1;
             else {                                  // identifier might be a keyword.
                  String s = strbuf.ToString();      // case-sensitive, so don't change case.
