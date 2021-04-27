@@ -140,8 +140,10 @@ namespace AllanMilne.PALCompiler
             {
                 // check if the variable being assigned to exists
                 int variable = semantics.checkVariable(lhs);
-
-                semantics.checkTypesSame(rhsToken, variable, rhs);
+                
+                // only check assignment type compatibility if the variable exists
+                if (variable != LanguageType.Undefined)
+                    semantics.checkTypesSame(rhsToken, variable, rhs);
             }
         }
 
