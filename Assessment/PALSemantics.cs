@@ -75,7 +75,7 @@ namespace AllanMilne.PALCompiler
             // if both sides are of the same type, return that as the overall expression type
             if (checkTypesSame(expected, lhs, rhs))
                 return lhs;
-            // otherwise return the bigger type of the two (type inference)
+            // otherwise return the larger type of the two (type inference)
             else
                 return lhs > rhs ? lhs : rhs;
         }
