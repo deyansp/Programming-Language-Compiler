@@ -86,7 +86,7 @@ namespace AllanMilne.PALCompiler
                 mustBe("INTEGER");
             }
             else
-                syntaxError("variable type must be REAL or INTEGER");
+                syntaxError("<Type>");
             
             return type;
         }
@@ -109,7 +109,7 @@ namespace AllanMilne.PALCompiler
                 recIO();
             }
             else
-                syntaxError("expected Assignment, Loop, Conditional, or I/O statement");
+                syntaxError("<Statement>");
         }
 
         protected void recBlockOfStatements()
@@ -234,7 +234,7 @@ namespace AllanMilne.PALCompiler
             }
             
             else
-                syntaxError("Value must be IDENTIFIER, INTEGER or REAL");
+                syntaxError("<Value>");
 
             return valueType;
         }
@@ -264,7 +264,7 @@ namespace AllanMilne.PALCompiler
             else if (have(">"))
                 mustBe(">");
             else
-                syntaxError("invalid BOOLEAN EXPRESSION");
+                syntaxError("<BooleanExpr>");
             
             // save token for correct error reporting
             IToken rhsToken = scanner.CurrentToken;
@@ -323,7 +323,7 @@ namespace AllanMilne.PALCompiler
             }
 
             else
-                syntaxError("Invalid I/O statement");
+                syntaxError("<I-O>");
         }
 
 
