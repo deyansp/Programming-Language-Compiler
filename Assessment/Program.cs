@@ -12,7 +12,6 @@ namespace AllanMilne.PALCompiler
             if (args.Length != 1)
             {
                 Console.WriteLine("Invalid usage: <filename>");
-                return;
             }
 
             // compiler test mode
@@ -23,7 +22,9 @@ namespace AllanMilne.PALCompiler
 
             // otherwise compile the file provided as an argument
             else
+            {
                 runCompiler(args[0]);
+            }
 
         } // end Main method.
         
