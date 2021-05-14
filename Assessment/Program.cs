@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using AllanMilne.Ardkit;
+using System.Reflection;
 
 namespace AllanMilne.PALCompiler
 {
@@ -30,11 +31,15 @@ namespace AllanMilne.PALCompiler
         
         static void runTestsFromTxtFiles()
         {
-            // getting the root project directory
-            DirectoryInfo baseDir = new DirectoryInfo(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName);
+            // getting the root path for the exe
+            string currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = Path.GetFullPath(Path.Combine(currentPath, ".."));
+            
+            // DirectoryInfo based on that path to be able to access different folders
+            DirectoryInfo parentDir = new DirectoryInfo(Directory.GetParent(exePath).Parent.FullName);
             
             // the folder with code txt files
-            var testDir = baseDir.GetDirectories("Tests");
+            var testDir = parentDir.GetDirectories("Tests");
 
             if (testDir.Length != 1)
             {
