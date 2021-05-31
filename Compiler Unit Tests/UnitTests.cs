@@ -74,5 +74,113 @@ namespace Compiler_Unit_Tests
             parser.Parse(reader);
             Assert.IsTrue(parser.Errors.Count == 0);
         }
+
+        [TestMethod]
+        public void Semantics_Valid_Types_And_Assignments()
+        {
+            PALParser parser = new PALParser();
+            StringReader reader = new StringReader(@"PROGRAM ValidTypesAndAssignments
+            WITH
+                a, b AS REAL
+                i AS INTEGER
+            IN
+                a = 7.87
+                b = 2.0
+                a = a + b
+
+                i = 64
+                i = i * 8
+
+                IF i > 128
+	            THEN OUTPUT i
+	            ELSE OUTPUT 128
+                ENDIF
+    
+            END");
+
+            parser.Parse(reader);
+            Assert.IsTrue(parser.Errors.Count == 0);
+        }
+
+        [TestMethod]
+        public void Semantics_Valid_Boolean_Expression()
+        {
+            PALParser parser = new PALParser();
+            StringReader reader = new StringReader(@"PROGRAM BooleanExprSameTypes
+            WITH
+            IN 
+
+            IF 2 + 3 > 5
+            THEN OUTPUT 1
+            ELSE OUTPUT 0
+            ENDIF
+
+            END");
+
+            parser.Parse(reader);
+            Assert.IsTrue(parser.Errors.Count == 0);
+        }
+
+        [TestMethod]
+        public void Semantics_Invalid_Types_And_Assignments()
+        {
+            PALParser parser = new PALParser();
+            StringReader reader = new StringReader(@"PROGRAM ValidTypesAndAssignments
+            PROGRAM InvalidTypesAndAssignments
+            WITH
+                a, b AS REAL
+                i AS INTEGER
+            IN
+                a = 7.87
+                b = 2
+                a = a + b
+
+                d = 2
+
+                i = 64
+                b = a * i
+                i = 21.02
+            END");
+
+            parser.Parse(reader);
+            Assert.IsTrue(parser.Errors.Count == 4);
+        }
+
+        [TestMethod]
+        public void Semantics_Invalid_Expression_Types()
+        {
+            PALParser parser = new PALParser();
+            StringReader reader = new StringReader(@"PROGRAM InvalidTypeExpressions 
+            WITH
+                i AS INTEGER
+                j AS REAL
+            IN
+                INPUT i, j
+    
+                i = (7.0 * j + 2.0)
+                j = (3.3 / 1.5 - 7)
+    
+                OUTPUT i, j
+            END");
+
+            parser.Parse(reader);
+            Assert.IsTrue(parser.Errors.Count == 2);
+        }
+
+        [TestMethod]
+        public void Semantics_Invalid_Undeclared_INPUT_Variables()
+        {
+            PALParser parser = new PALParser();
+            StringReader reader = new StringReader(@"PROGRAM UndeclaredINPUTVars
+            WITH
+                i AS INTEGER
+                k AS REAL
+            IN
+                INPUT i, k, x, y, z
+            END");
+
+            parser.Parse(reader);
+            Assert.IsTrue(parser.Errors.Count == 3);
+        }
     }
 }
