@@ -5,7 +5,7 @@ It makes use of an Ardkit library, class inheritance and method overriding to me
  Unit tests and a test mode are used to check for correct syntax and semantic analysis.
 
 # Sample Output
-![Sample Output] (https://raw.githubusercontent.com/deyansp/Programming-Language-Compiler/main/compiler-output.PNG?token=AKMQMV6NVR7LKKOUJ7UZK5TAX7SCU)
+![Sample Output](https://raw.githubusercontent.com/deyansp/Programming-Language-Compiler/main/compiler-output.PNG?token=AKMQMV6NVR7LKKOUJ7UZK5TAX7SCU)
 
 This output was generated from the following code:
 ```
